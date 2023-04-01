@@ -15,6 +15,18 @@ const plays = JSON.parse(fs.readFileSync("./plays.json", "utf-8"))
  */
 export function statement(invoice, plays) {
     /**
+     * ボリューム特典のクレジット
+     * @param aPerformance パフォーマンス
+     * @returns 
+     */
+    function volumeCreditsFor(aPerformance) {
+        let result = 0
+        result += Math.max(aPerformance.audience - 30, 0)
+        if ("comedy" == playFor(aPerformance).type) result += Math.floor(aPerformance.audience / 5)
+        return result
+    }
+
+    /**
      * 演目
      * @param aPerformance パフォーマンス
      * @returns 
@@ -68,10 +80,7 @@ export function statement(invoice, plays) {
     ).format
 
     for (let perf of invoice.performances) {
-        // ボリューム特典のポイントを加算
-        volumeCredits += Math.max(perf.audience - 30, 0)
-        // 喜劇の時は10人につき、さらにポイントを加算
-        if ("comedy" == playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5)
+        volumeCredits += volumeCreditsFor(perf)
         // 注文の内訳を出力
         result += `  ${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${perf.audience} seats)\n`
         totalAmount += amountFor(perf)
