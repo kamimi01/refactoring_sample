@@ -15,6 +15,15 @@ const plays = JSON.parse(fs.readFileSync("./plays.json", "utf-8"))
  */
 export function statement(invoice, plays) {
     /**
+     * 演目
+     * @param aPerformance パフォーマンス
+     * @returns 
+     */
+    function playFor(aPerformance) {
+        return plays[aPerformance.playID]
+    }
+
+    /**
      * 演目ごとの料金の計算
      * @param perf パフォーマンス
      * @param play 演目の一覧
@@ -59,7 +68,7 @@ export function statement(invoice, plays) {
     ).format
 
     for (let perf of invoice.performances) {
-        const play = plays[perf.playID]
+        const play = playFor(perf)
         let thisAmount = amountFor(perf, play)
 
         // ボリューム特典のポイントを加算
