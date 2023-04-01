@@ -29,9 +29,9 @@ export function statement(invoice, plays) {
      * @param play 演目の一覧
      * @returns 
      */
-    function amountFor(perf, play) {
+    function amountFor(perf) {
         let thisAmount = 0
-        switch (play.type) {
+        switch (playFor(perf).type) {
             case "tragedy":
                 thisAmount = 40000
                 // 観客が30人以上だったら、30を超えた人数ごとに $1000 加算する
@@ -49,7 +49,7 @@ export function statement(invoice, plays) {
                 thisAmount += 300 + perf.audience
                 break
             default:
-                throw new Error(`unknown type: ${play.type}`)
+                throw new Error(`unknown type: ${playFor(perf).type}`)
         }
         return thisAmount
     }
@@ -68,7 +68,7 @@ export function statement(invoice, plays) {
     ).format
 
     for (let perf of invoice.performances) {
-        let thisAmount = amountFor(perf, playFor(perf))
+        let thisAmount = amountFor(perf)
 
         // ボリューム特典のポイントを加算
         volumeCredits += Math.max(perf.audience - 30, 0)
