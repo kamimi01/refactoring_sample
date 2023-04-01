@@ -15,6 +15,22 @@ const plays = JSON.parse(fs.readFileSync("./plays.json", "utf-8"))
  */
 export function statement(invoice, plays) {
     /**
+     * USD にフォーマットする
+     * @param aNumber 
+     * @returns 
+     */
+    function usd(aNumber) {
+        return new Intl.NumberFormat(
+            "en-US",
+            {
+                style: "currency",
+                currency: "USD",
+                minimumFractionDigits: 2
+            }
+        ).format(aNumber)
+    }
+
+    /**
      * ボリューム特典のクレジット
      * @param aPerformance パフォーマンス
      * @returns 
@@ -70,23 +86,14 @@ export function statement(invoice, plays) {
     let volumeCredits = 0
     let result = `Statement for ${invoice.customer}（請求）\n`
 
-    const format = new Intl.NumberFormat(
-        "en-US",
-        {
-            style: "currency",
-            currency: "USD",
-            minimumFractionDigits: 2
-        }
-    ).format
-
     for (let perf of invoice.performances) {
         volumeCredits += volumeCreditsFor(perf)
         // 注文の内訳を出力
-        result += `  ${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${perf.audience} seats)\n`
+        result += `  ${playFor(perf).name}: ${usd(amountFor(perf) / 100)} (${perf.audience} seats)\n`
         totalAmount += amountFor(perf)
     }
 
-    result += `Amount owed（請求額） is ${format(totalAmount / 100)}\n`
+    result += `Amount owed（請求額） is ${usd(totalAmount / 100)}\n`
     result += `You earned ${volumeCredits} credits（特典クレジット）\n`
     return result
 }
