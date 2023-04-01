@@ -45,6 +45,12 @@ export function statement(invoice, plays) {
     return result
 }
 
+/**
+ * 演目ごとの料金の計算
+ * @param perf パフォーマンス
+ * @param play 演目の一覧
+ * @returns 
+ */
 function amountFor(perf, play) {
     let thisAmount = 0
     switch (play.type) {
