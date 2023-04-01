@@ -3,9 +3,6 @@ import * as fs from "fs"
 const invoice = JSON.parse(fs.readFileSync("./invoices.json", 'utf-8'))[0]
 const plays = JSON.parse(fs.readFileSync("./plays.json", "utf-8"))
 
-const result = statement(invoice, plays)
-console.log(result)
-
 /**
  * 劇団員を派遣して、劇のパフォーマンスを行う会社が、演じた劇に対しての請求をする。特典のポイントもある。
  * 計算したいこと
